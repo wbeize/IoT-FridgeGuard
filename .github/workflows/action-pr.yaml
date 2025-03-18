@@ -5,7 +5,6 @@ on:
     branches:
       - 'feature/*'
       - 'release/*'
-      - 'hotfix/*'
   workflow_dispatch:
 
 jobs:
@@ -15,13 +14,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Verificar existência do token
+        run: |
+          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+            echo "Token não está definido!"
+            exit 1
+          else
+            echo "Token definido com sucesso! (tamanho: ${#GITHUB_TOKEN})"
+          fi
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          # Base da PR: pode ser "develop" ou "homolog" dependendo do fluxo
-          base: develop
-          # Usa a branch atual como head
+          base: develop, 'feature/*'
           branch: ${{ github.ref_name }}
           title: "PR automático: Merge de ${{ github.ref_name }} para develop"
           body: |
