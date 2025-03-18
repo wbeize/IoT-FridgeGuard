@@ -1,0 +1,40 @@
+name: Auto Create Pull Request
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'release/*'
+  workflow_dispatch:
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verificar existência do token
+        run: |
+          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+            echo "Token não está definido!"
+            exit 1
+          else
+            echo "Token definido com sucesso! (tamanho: ${#GITHUB_TOKEN})"
+          fi
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: ${{ github.ref_name }}
+          title: "PR automático: Merge de ${{ github.ref_name }} para develop"
+          body: |
+            Esse Pull Request foi criado automaticamente.
+            Favor revisar as alterações e proceder com o merge se estiver tudo correto.
+          commit-message: "[create-pull-request] automated change"
+          committer: "GitHub <noreply@github.com>"
+          signoff: false
+          delete-branch: false
+          draft: false
