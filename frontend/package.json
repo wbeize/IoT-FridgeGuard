@@ -1,0 +1,21 @@
+{
+  "name": "univesp-pi-3-iot-frontend",
+  "version": "1.0.0",
+  "description": "Frontend application for the IoT-FridgeGuard project",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wbeize/IoT-FridgeGuard.git"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  }
+}
