@@ -33,3 +33,8 @@ jobs:
           body: |
             Esse Pull Request foi criado automaticamente.
             Favor revisar as alterações e proceder com o merge se estiver tudo correto.
+          commit-message: "[create-pull-request] automated change"
+          committer: "GitHub <noreply@github.com>"
+          signoff: false
+          delete-branch: false
+          draft: false
