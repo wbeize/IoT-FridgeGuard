@@ -41,7 +41,7 @@ jobs:
           git push origin ${{ env.new_version }}
 
       - name: Cria Pull Request
-        if: github.ref == 'refs/heads/release/*'
+        if: startsWith(github.ref, 'refs/heads/release/')
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

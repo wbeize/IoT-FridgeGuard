@@ -57,9 +57,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Incrementando versão de release'
-          branch: 'release/v*'
+          branch: 'release/${{ steps.set_version.outputs.new_version }}'
           base: 'main'
-          title: 'Release v*'
+          title: release/${{ steps.set_version.outputs.new_version }}'
           body: |
             This pull request includes the following changes:
             - Increment version for release
