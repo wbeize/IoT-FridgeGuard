@@ -30,7 +30,7 @@ jobs:
             echo "Feature branch created correctly from develop."
           fi
 
-      - name: Cria Pull Request
+      - name: Create Pull Request
         if: github.event_name == 'push'
         uses: peter-evans/create-pull-request@v4
         with:
