@@ -1,0 +1,26 @@
+name: Create Release Branch
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  create-release-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Create release branch
+        run: |
+          chmod +x ./create_release_branch.sh
+          ./create_release_branch.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
