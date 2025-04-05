@@ -23,11 +23,13 @@ jobs:
       - name: Check base branch
         run: |
           BASE_BRANCH=$(git merge-base HEAD origin/develop)
-          if [ "$BASE_BRANCH" != "$(git rev-parse origin/develop)" ]; then
-            echo "Feature branches must be created from develop."
+          DEVELOP_HEAD=$(git rev-parse origin/develop)
+          LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
+          if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
+            echo "Feature branches must be created from develop or origin/develop."
             exit 1
           else
-            echo "Feature branch created correctly from develop."
+            echo "Feature branch created correctly from develop or origin/develop."
           fi
 
       - name: Create Pull Request
