@@ -1,28 +1,19 @@
 name: Check Feature Branch Source
 
 on:
-  create:
+  pull_request:
     branches:
-      - 'feature/*'
-  push:
-    branches:
-      - 'feature/*'
-  workflow_dispatch:
+      - 'develop'
 
 jobs:
-  check-feature-branch:
+  check:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Fetch all branches
-        run: git fetch --all
-
-      - name: Check base branch
+      - name: Verify feature branch source
         run: |
-          BASE_BRANCH=$(git merge-base HEAD origin/develop)
           DEVELOP_HEAD=$(git rev-parse origin/develop)
           LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
           if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
@@ -31,6 +22,8 @@ jobs:
           else
             echo "Feature branch created correctly from develop or origin/develop."
           fi
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
 
       - name: Create Pull Request
         if: github.event_name == 'push'
