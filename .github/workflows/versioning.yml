@@ -1,0 +1,51 @@
+name: Versionamento
+
+on:
+  push:
+    branches:
+      - develop
+      - release/*
+  workflow_dispatch:
+
+jobs:
+  versioning:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          git fetch --tags
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          if [ -z "$latest_tag" ]; then
+            new_version="v1.0.0"
+          else
+            new_version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF++;print}')
+          fi
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+      - name: Cria tag com a nova versão
+        run: |
+          git tag ${{ env.new_version }}
+          git push origin ${{ env.new_version }}
+
+      - name: Cria Pull Request
+        if: github.ref == 'refs/heads/release/*'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Incrementando versão de release'
+          branch: ${{ github.ref }}
+          base: 'main'
+          title: 'Release ${{ env.new_version }}'
+          body: |
+            Este pull request inclui as seguintes alterações:
+            - Incremento de versão para release

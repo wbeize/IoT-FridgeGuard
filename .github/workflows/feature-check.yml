@@ -1,0 +1,41 @@
+name: Check Feature Branch Source
+
+on:
+  create:
+    branches:
+      - 'feature/*'
+  push:
+    branches:
+      - 'feature/*'
+  workflow_dispatch:
+
+jobs:
+  check-feature-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Check base branch
+        run: |
+          BASE_BRANCH=$(git merge-base HEAD origin/develop)
+          if [ "$BASE_BRANCH" != "$(git rev-parse origin/develop)" ]; then
+            echo "Feature branches must be created from develop."
+            exit 1
+          else
+            echo "Feature branch created correctly from develop."
+          fi
+
+      - name: Cria Pull Request
+        if: github.event_name == 'push'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Atualizações na feature branch'
+          branch: ${{ github.ref }}
+          base: 'develop'
+          title: 'Atualizações na feature branch'
+          body: |
+            Este pull request inclui as seguintes alterações:
+            - Atualizações na feature branch
