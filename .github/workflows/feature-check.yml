@@ -4,16 +4,26 @@ on:
   pull_request:
     branches:
       - 'develop'
+  workflow_dispatch:
+    workflow_run:
+      workflows: ["(setup git) passos compartilhados"]
+      types:
+        - completed
 
 jobs:
-  check:
+  feature-check:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Fetch all branches
+        run: git fetch --all
+
       - name: Verify feature branch source
         run: |
+          git fetch origin develop
           DEVELOP_HEAD=$(git rev-parse origin/develop)
           LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
           if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then

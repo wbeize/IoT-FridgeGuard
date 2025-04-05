@@ -6,6 +6,10 @@ on:
       - develop
       - release/*
   workflow_dispatch:
+    workflow_run:
+        workflows: ["(setup git) passos compartilhados"]
+        types:
+            - completed
 
 jobs:
   versioning:
@@ -14,11 +18,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Set up Git
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
 
       - name: Fetch all branches
         run: git fetch --all
