@@ -25,6 +25,7 @@ jobs:
           if [ ! -d ".git" ]; then
             echo "Diretório .git não encontrado. Verifique se você está no diretório correto do repositório."
             exit 1
+          fi
 
   feature-check:
     runs-on: ubuntu-latest
