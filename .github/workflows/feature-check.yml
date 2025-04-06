@@ -33,6 +33,14 @@ jobs:
             exit 1
           fi
 
+      - name: Obter título do commit mais recente
+        id: get_commit_title
+        run: echo "commit_title=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+      - name: Output Commit Message
+        run: |
+          echo "Commit Message: ${{ steps.commit_message.outputs.message }}"
+
   feature-check:
     runs-on: ubuntu-latest
     needs: setup-git
@@ -61,16 +69,6 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v2
 
-      - name: Obter título do commit mais recente
-        id: get_commit_title
-        run: echo "commit_title=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-
-      - name: Output Commit Message
-        run: |
-          echo "Commit Message: ${{ steps.commit_message.outputs.message }}"
-#         echo "Commit Message: ${{ env.commit_title }}"
-
-
 #      - name: Cria Pull Request
 #        if: github.event_name == 'pull_request'
 #        uses: peter-evans/create-pull-request@v4
@@ -93,7 +91,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin
           git checkout "${GITHUB_HEAD_REF}"
-          git push --force-with-lease origin "${GITHUB_HEAD_REF}:${GITHUB_REF}"
+          if [[ "${GITHUB_REF}" != refs/pull/*/merge ]]; then
+            git push --force-with-lease origin "${GITHUB_HEAD_REF}:${GITHUB_REF}"
+          else
+            echo "Skipping push to hidden ref ${GITHUB_REF}"
+          fi
 
       - name: Create Pull Request
         if: github.event_name == 'pull_request'
