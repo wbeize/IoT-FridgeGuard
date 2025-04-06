@@ -20,9 +20,6 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           echo "Configuração do Git concluída."
 
-#      - name: Definir workspace
-#        run: cd ${{ github.workspace }}
-
       - name: Verificar se estamos no diretório correto do repositório
         run: |
           if [ ! -d ".git" ]; then
@@ -30,23 +27,18 @@ jobs:
             exit 1
           fi
 
-#      - name: (git fetch) Busca todas as branches
-#        run: git fetch --all
+      - name: Clonar repositório
+        run: |
+          git clone ${{ github.event.pull_request.head.repo.clone_url }} repo
+          cd repo
 
   feature-check:
     runs-on: ubuntu-latest
     needs: setup-git
     steps:
-#      - name: Verificar se estamos no diretório correto do repositório
-#        run: |
-#          cd ${{ github.workspace }}
-#          if [ ! -d ".git" ]; then
-#            echo "Diretório .git não encontrado. Verifique se você está no diretório correto do repositório."
-#            exit 1
-#          fi
-
       - name: Garantir que a branch develop existe localmente
         run: |
+          cd repo
           if ! git show-ref --verify --quiet refs/heads/develop; then
             echo "Branch develop não encontrada localmente. Fazendo checkout de origin/develop..."
             git checkout -b develop origin/develop
@@ -72,6 +64,7 @@ jobs:
 
       - name: Verificar branch develop no repositório remoto
         run: |
+          cd repo
           chmod +x /Users/taira/UNIVESP-PI-3-IoT/check_develop_branch.sh
           /Users/taira/UNIVESP-PI-3-IoT/check_develop_branch.sh ${{ github.event.pull_request.head.repo.clone_url }}
         env:
