@@ -88,7 +88,6 @@ jobs:
           commit-message: 'Criando Pull Request para a feature branch'
           branch: ${{ github.ref_name }}    # utilizando nome da branch dinamicamente
           base: 'develop'
-          repository: 'wbeize/IoT-FridgeGuard'  # Repositório alvo definido
           title: 'Pull Request para a feature branch'
           body: |
             Este pull request inclui as seguintes alterações:
