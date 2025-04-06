@@ -8,6 +8,18 @@ if [ -z "$REMOTE_URL" ]; then
   exit 1
 fi
 
+# Verifica se estamos em um repositório Git
+if [ ! -d ".git" ]; then
+  echo "Erro: Este script deve ser executado em um repositório Git."
+  exit 1
+fi
+
+# Verifica se estamos no diretório correto do repositório
+if [ ! -d ".git" ]; then
+  echo "Erro: Este script deve ser executado no diretório correto do repositório."
+  exit 1
+fi
+
 # Verifica se a branch 'develop' existe no repositório remoto
 if git ls-remote --heads "$REMOTE_URL" develop | grep develop > /dev/null; then
   echo "A branch 'develop' existe no repositório remoto."

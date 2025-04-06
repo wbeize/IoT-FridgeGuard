@@ -31,16 +31,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-git
     steps:
-#      - name: Garantir que a branch develop existe localmente
-#        run: |
-#          if ! git show-ref --verify --quiet refs/heads/develop; then
-#            echo "Branch develop não encontrada localmente. Fazendo checkout de origin/develop..."
-#            git checkout -b develop origin/develop
-#          else
-#            echo "Branch develop encontrada localmente. Fazendo checkout..."
-#            git checkout develop
-#          fi
-
+      - name: Checkout do repositório
+        uses: actions/checkout@v2
       - name: Verifica origem da branch de feature
         run: |
           echo "Verificando origem da branch de feature..."
