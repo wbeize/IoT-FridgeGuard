@@ -51,6 +51,7 @@ jobs:
 
   feature-check:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' && startsWith(github.head_ref, 'feature/**')
     needs: setup-git
     steps:
       - name: Checkout do repositório
@@ -92,9 +93,6 @@ jobs:
             Este pull request inclui as seguintes alterações:
             - Atualizações na feature branch
           draft: false
-          permissions:
-            contents: write
-            pull-requests: write
 
       - name: Exibir link do Pull Request
         run: |
@@ -107,7 +105,7 @@ jobs:
 
   create-release:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    if: github.ref == 'refs/heads/main' && startsWith(github.head_ref, 'release/**')
     needs: feature-check
     steps:
       - name: Cache das tags do Git
@@ -166,9 +164,6 @@ jobs:
             Este pull request inclui as seguintes alterações:
             - Atualizações na release branch
           draft: false
-        permissions:
-          contents: write
-          pull-requests: write
 
       - name: Exibir link do Pull Request
         run: |
@@ -181,6 +176,7 @@ jobs:
 
   auto-pr:
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/feature/**') || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/origin/develop' || startsWith(github.ref, 'refs/heads/release/**')
     permissions:
       contents: write
       pull-requests: write
