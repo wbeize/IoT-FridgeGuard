@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v2
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Instalar dependências
+        run: |
+          # Comando para instalar dependências, por exemplo:
+          # npm install
+          echo "Instalando dependências..."
+
+      - name: Executar testes
+        run: |
+          # Comando para executar testes, por exemplo:
+          # npm test
+          echo "Executando testes..."

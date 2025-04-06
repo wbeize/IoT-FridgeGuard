@@ -1,0 +1,28 @@
+name: Feature Flags
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  feature-flags:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v2
+
+      - name: Configurar Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Verificar feature flags
+        run: |
+          # Comando para verificar e aplicar feature flags, por exemplo:
+          # npm run feature-flags
+          echo "Verificando e aplicando feature flags..."

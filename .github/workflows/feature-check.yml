@@ -27,6 +27,15 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           echo "Configuração do Git concluída."
 
+      - name: Instalar git-flow
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-flow
+
+      - name: Inicializar git-flow
+        run: |
+          git flow init -d
+
       - name: Verificar se estamos no diretório correto do repositório
         run: |
           if [ ! -d ".git" ]; then
@@ -37,10 +46,6 @@ jobs:
       - name: Obter título do commit mais recente
         id: get_commit_title
         run: echo "commit_title=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
-
-#      - name: Output Commit Message
-#        run: |
-#          echo "Commit Message: ${{ steps.commit_message.outputs.message }}"
 
   feature-check:
     runs-on: ubuntu-latest
