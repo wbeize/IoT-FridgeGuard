@@ -30,7 +30,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          RELEASE_BRANCH=create-pull-request/patch  # Alterado nome da branch
+          PREFIX="create-pull-request"
+          RELEASE_BRANCH="${PREFIX}-$(date +%s)"
           git checkout -b $RELEASE_BRANCH
           git push origin $RELEASE_BRANCH
       - name: Cria Pull Request para main
@@ -39,6 +40,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Automated release PR from develop'
           base: main
-          branch: create-pull-request/patch  # Alterado para usar o novo nome da branch
+          branch: ${{ steps.cria_branch_release.outputs.release_branch }}
           title: 'Release PR: from develop to main'
           body: 'Pull request automático de release criado a partir da develop'
