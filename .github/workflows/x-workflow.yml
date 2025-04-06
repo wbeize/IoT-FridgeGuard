@@ -87,6 +87,7 @@ jobs:
             Este pull request inclui as seguintes alterações:
             - Atualizações na feature branch
           draft: false
+          force: false
 
       - name: Exibir link do Pull Request
         run: |
