@@ -61,3 +61,8 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reaction-type: hooray
+
+      - name: Restaurar configuração do Git
+        run: |
+          git config --global --unset credential.helper
+          echo "Configuração do Git restaurada."
