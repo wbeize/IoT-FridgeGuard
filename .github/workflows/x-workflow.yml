@@ -92,6 +92,9 @@ jobs:
             Este pull request inclui as seguintes alterações:
             - Atualizações na feature branch
           draft: false
+          permissions:
+            contents: write
+            pull-requests: write
 
       - name: Exibir link do Pull Request
         run: |
@@ -163,6 +166,9 @@ jobs:
             Este pull request inclui as seguintes alterações:
             - Atualizações na release branch
           draft: false
+        permissions:
+          contents: write
+          pull-requests: write
 
       - name: Exibir link do Pull Request
         run: |
@@ -178,10 +184,15 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    needs: prepare-git
+    needs: [prepare-git, setup-git, feature-check, create-release]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Configurar credenciais HTTPS
+        run: |
+          git config --global credential.helper store
+          echo "https://${{ secrets.GITHUB_TOKEN }}:@github.com" > ~/.git-credentials
 
       - name: Make changes to pull request
         run: date +%s > report.txt
