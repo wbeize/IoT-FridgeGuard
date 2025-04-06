@@ -31,12 +31,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-git
     steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v2
+#      - name: Checkout do repositório
+#        uses: actions/checkout@v2
+
       - name: Verifica origem da branch de feature
         run: |
           echo "Verificando origem da branch de feature..."
-          git fetch origin develop
+          git fetch --all
           DEVELOP_HEAD=$(git rev-parse origin/develop)
           LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
           if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
