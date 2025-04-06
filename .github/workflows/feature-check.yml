@@ -37,6 +37,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup-git
     steps:
+      - name: Verificar se estamos no diretório correto do repositório
+        run: |
+          cd ${{ github.workspace }}
+          if [ ! -d ".git" ]; then
+            echo "Diretório .git não encontrado. Verifique se você está no diretório correto do repositório."
+            exit 1
+          fi
+
       - name: Garantir que a branch develop existe localmente
         run: |
           cd ${{ github.workspace }}
