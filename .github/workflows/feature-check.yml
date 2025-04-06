@@ -23,6 +23,13 @@ jobs:
       - name: Definir workspace
         run: cd ${{ github.workspace }}
 
+      - name: Verificar se estamos no diretório correto do repositório
+        run: |
+          if [ ! -d ".git" ]; then
+            echo "Diretório .git não encontrado. Verifique se você está no diretório correto do repositório."
+            exit 1
+          fi
+
       - name: (git fetch) Busca todas as branches
         run: git fetch --all
 
@@ -66,7 +73,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'Atualizações na feature branch'
+          commit-message: ${{ github.event.pull_request.title }}
           branch: ${{ github.ref }}
           base: 'develop'
           title: 'Atualizações na feature branch'
