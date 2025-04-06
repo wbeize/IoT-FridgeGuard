@@ -69,19 +69,6 @@ jobs:
       - name: Checkout do repositório
         uses: actions/checkout@v2
 
-#      - name: Cria Pull Request
-#        if: github.event_name == 'pull_request'
-#        uses: peter-evans/create-pull-request@v4
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          commit-message: ${{ env.commit_title }}
-#          branch: ${{ github.ref }}
-#          base: 'develop'
-#          title: 'Atualizações na feature branch'
-#          body: |
-#            Este pull request inclui as seguintes alterações:
-#            - Atualizações na feature branch
-
       - name: Grant permissions for GITHUB_TOKEN
         env:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
@@ -96,6 +83,7 @@ jobs:
           else
             echo "Skipping push to hidden ref ${GITHUB_REF}"
           fi
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
@@ -108,15 +96,6 @@ jobs:
             Este pull request inclui as seguintes alterações:
             - Atualizações na feature branch
 
-#      - name: Create Pull Request
-#        if: github.event_name == 'pull_request'
-#        uses: peter-evans/create-pull-request@v5
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          commit-message: ${{ env.commit_title }}
-#          branch: ${{ github.ref }}
-#          base: 'develop'
-#          title: 'Atualizações na feature branch'
-#          body: |
-#            Este pull request inclui as seguintes alterações:
-#            - Atualizações na feature branch
+      - name: Exibir link do Pull Request
+        run:
+          echo "Link do Pull Request: ${{ steps.create-pull-request.outputs.pull-request-url }}"
