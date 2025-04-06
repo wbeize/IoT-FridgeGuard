@@ -59,7 +59,26 @@ jobs:
         id: get_commit_title
         run: echo "commit_title=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
 
-      - name: Cria Pull Request
+#      - name: Cria Pull Request
+#        if: github.event_name == 'pull_request'
+#        uses: peter-evans/create-pull-request@v4
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          commit-message: ${{ env.commit_title }}
+#          branch: ${{ github.ref }}
+#          base: 'develop'
+#          title: 'Atualizações na feature branch'
+#          body: |
+#            Este pull request inclui as seguintes alterações:
+#            - Atualizações na feature branch
+
+      - name: Grant permissions for GITHUB_TOKEN
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: Create Pull Request
         if: github.event_name == 'pull_request'
         uses: peter-evans/create-pull-request@v4
         with:
