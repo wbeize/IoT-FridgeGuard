@@ -3,7 +3,7 @@ name: (feature-check) Verifica Origem da Branch de Feature
 on:
   push:
     branches:
-      - 'develop'
+      - 'feature/**'
   pull_request:
     branches:
       - 'release/*'
