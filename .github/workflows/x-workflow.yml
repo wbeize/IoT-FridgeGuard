@@ -168,7 +168,6 @@ jobs:
 
   auto-pr:
     runs-on: ubuntu-latest
-    needs: [setup-git, feature-check, create-release]
     permissions:
       contents: write
       pull-requests: write
