@@ -32,6 +32,7 @@ jobs:
     steps:
       - name: Garantir que a branch develop existe localmente
         run: |
+          cd ${{ github.workspace }}
           if ! git show-ref --verify --quiet refs/heads/develop; then
             echo "Branch develop não encontrada localmente. Fazendo checkout de origin/develop..."
             git checkout -b develop origin/develop
@@ -42,6 +43,7 @@ jobs:
 
       - name: Verifica origem da branch de feature
         run: |
+          cd ${{ github.workspace }}
           echo "Verificando origem da branch de feature..."
           git fetch origin develop
           DEVELOP_HEAD=$(git rev-parse origin/develop)
