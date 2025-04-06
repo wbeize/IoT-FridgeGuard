@@ -96,6 +96,7 @@ jobs:
           body: |
             Este pull request inclui as seguintes alterações:
             - Atualizações na release branch
+          draft: false  # Adicionado para garantir que o PR não seja criado como rascunho
 
       - name: Exibir link do Pull Request
         run: |
