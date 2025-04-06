@@ -21,6 +21,16 @@ jobs:
           title: 'Feature PR: ${{ github.ref }}'
           body: 'Pull request automático para integrar feature na develop'
 
+  automerge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          token: ${{ secrets.ACTIONS_BOT_TOKEN }}
+          pull-request-number: ${{ github.event.pull_request.number }}
+          merge-method: squash
+
   develop_to_release:
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
