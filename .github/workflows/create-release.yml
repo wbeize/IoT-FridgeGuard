@@ -24,8 +24,8 @@ jobs:
       - name: Definir workspace
         run: cd ${{ github.workspace }}
 
-      - name: (git fetch) Busca todas as branches
-        run: git fetch --all
+#      - name: (git fetch) Busca todas as branches
+#        run: git fetch --all
 
       - name: Cache das tags do Git
         uses: actions/cache@v3
