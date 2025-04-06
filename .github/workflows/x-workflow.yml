@@ -51,8 +51,8 @@ jobs:
 
   feature-check:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/feature/**') && (startsWith(github.head_ref, 'refs/heads/origin/develop') || startsWith(github.head_ref, 'refs/heads/develop'))
-    needs: [setup-git, prepare-git]
+    if: startsWith(github.ref, 'refs/heads/feature/**')
+    needs: setup-git
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v2
