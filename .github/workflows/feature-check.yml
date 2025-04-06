@@ -96,16 +96,27 @@ jobs:
           else
             echo "Skipping push to hidden ref ${GITHUB_REF}"
           fi
-
       - name: Create Pull Request
-        if: github.event_name == 'pull_request'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ env.commit_title }}
-          branch: ${{ github.ref }}
+          branch: ${{ github.head_ref }}
           base: 'develop'
           title: 'Atualizações na feature branch'
           body: |
             Este pull request inclui as seguintes alterações:
             - Atualizações na feature branch
+
+#      - name: Create Pull Request
+#        if: github.event_name == 'pull_request'
+#        uses: peter-evans/create-pull-request@v5
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          commit-message: ${{ env.commit_title }}
+#          branch: ${{ github.ref }}
+#          base: 'develop'
+#          title: 'Atualizações na feature branch'
+#          body: |
+#            Este pull request inclui as seguintes alterações:
+#            - Atualizações na feature branch
