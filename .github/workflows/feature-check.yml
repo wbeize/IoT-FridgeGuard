@@ -72,6 +72,13 @@ jobs:
         env:
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
 
+      - name: Verificar branch develop no repositório remoto
+        run: |
+          chmod +x /Users/taira/UNIVESP-PI-3-IoT/check_develop_branch.sh
+          /Users/taira/UNIVESP-PI-3-IoT/check_develop_branch.sh ${{ github.event.pull_request.head.repo.clone_url }}
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+
   create-pr:
     runs-on: ubuntu-latest
     needs: feature-check
