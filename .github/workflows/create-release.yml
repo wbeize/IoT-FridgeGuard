@@ -20,11 +20,14 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           echo "Configuração do Git concluída."
 
-      - name: Definir workspace
-        run: cd ${{ github.workspace }}
+      - name: Instalar git-flow
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-flow
 
-#      - name: (git fetch) Busca todas as branches
-#        run: git fetch --all
+      - name: Inicializar git-flow
+        run: |
+          git flow init -d
 
   create-release:
     runs-on: ubuntu-latest
@@ -58,8 +61,9 @@ jobs:
           else
             new_version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF++;print}')
           fi
-          git checkout -b release/$new_version
-          git push origin release/$new_version
+          git flow release start $new_version
+          git flow release finish $new_version
+          git push origin --all
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
