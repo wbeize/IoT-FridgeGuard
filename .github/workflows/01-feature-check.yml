@@ -63,6 +63,22 @@ jobs:
             echo "Branch de feature criada corretamente a partir de develop ou origin/develop."
           fi
 
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Criando Pull Request para a feature branch'
+          branch: ${{ github.head_ref }}
+          base: 'develop'
+          title: 'Pull Request para a feature branch'
+          body: |
+            Este pull request inclui as seguintes alterações:
+            - Atualizações na feature branch
+
+      - name: Exibir link do Pull Request
+        run: |
+          echo "Link do Pull Request: ${{ steps.create-pull-request.outputs.pull-request-url }}
+
   create-pr:
     runs-on: ubuntu-latest
     needs: [setup-git, feature-check]
