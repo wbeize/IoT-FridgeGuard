@@ -16,8 +16,8 @@ jobs:
       - name: Configurar Git
         run: |
           echo "Configurando Git..."
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           echo "Configuração do Git concluída."
 
       - name: Verificar se estamos no diretório correto do repositório
