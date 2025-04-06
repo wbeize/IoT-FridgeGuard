@@ -65,6 +65,12 @@ jobs:
         id: get_commit_title
         run: echo "commit_title=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
 
+      - name: Output Commit Message
+        run: |
+          echo "Commit Message: ${{ env.commit_title }}"
+#         Uncomment the following line if you want to use the commit message in the PR body
+#         echo "Commit Message: ${{ steps.commit_message.outputs.message }}"
+
 #      - name: Cria Pull Request
 #        if: github.event_name == 'pull_request'
 #        uses: peter-evans/create-pull-request@v4
@@ -90,7 +96,7 @@ jobs:
 
       - name: Create Pull Request
         if: github.event_name == 'pull_request'
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ env.commit_title }}
