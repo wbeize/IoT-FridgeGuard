@@ -98,5 +98,5 @@ jobs:
             - Atualizações na feature branch
 
       - name: Exibir link do Pull Request
-        run:
+        run: |
           echo "Link do Pull Request: ${{ steps.create-pull-request.outputs.pull-request-url }}"
