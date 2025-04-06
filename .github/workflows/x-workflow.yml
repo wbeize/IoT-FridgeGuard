@@ -86,8 +86,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Criando Pull Request para a feature branch'
-          branch: ${{ github.head_ref || github.ref_name }}  # Ensure the branch name is not empty
+          branch: 'feature/**'    # PR branch fixa conforme solicitado
           base: 'develop'
+          repository: 'wbeize/IoT-FridgeGuard'  # Repositório alvo definido
           title: 'Pull Request para a feature branch'
           body: |
             Este pull request inclui as seguintes alterações:
