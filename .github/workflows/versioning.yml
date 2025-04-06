@@ -1,4 +1,4 @@
-name: Versionamento
+name: (versioning) Versionamento
 
 on:
   push:
@@ -7,18 +7,14 @@ on:
       - release/*
   workflow_dispatch:
     workflow_run:
-        workflows: ["(setup git) passos compartilhados"]
-        types:
-            - completed
+      workflows: ["(setup-git) passos compartilhados"]
+      types:
+        - completed
 
 jobs:
   versioning:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Fetch all branches
         run: git fetch --all
 
@@ -26,7 +22,7 @@ jobs:
         id: bump_version
         run: |
           git fetch --tags
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null)
           if [ -z "$latest_tag" ]; then
             new_version="v1.0.0"
           else
@@ -34,12 +30,12 @@ jobs:
           fi
           echo "new_version=$new_version" >> $GITHUB_ENV
 
-      - name: Cria tag com a nova versão
+      - name: Create tag with the new version
         run: |
           git tag ${{ env.new_version }}
           git push origin ${{ env.new_version }}
 
-      - name: Cria Pull Request
+      - name: Create Pull Request
         if: startsWith(github.ref, 'refs/heads/release/')
         uses: peter-evans/create-pull-request@v4
         with:

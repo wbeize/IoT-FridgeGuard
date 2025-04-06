@@ -1,4 +1,4 @@
-name: Cria Branch Release
+name: (create-release) Criar Branch Release
 
 on:
   push:
@@ -6,23 +6,19 @@ on:
       - develop
   workflow_dispatch:
     workflow_run:
-      workflows: [ "(setup git) passos compartilhados" ]
+      workflows: [ "(setup-git) passos compartilhados" ]
       types:
         - completed
 
 jobs:
   create-release:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2.3.4
-
       - name: Fetch all branches
         run: git fetch --all
 
       - name: Cache Git tags
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.git-refs
