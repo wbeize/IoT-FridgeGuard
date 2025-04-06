@@ -1,4 +1,4 @@
-name: Versionamento
+name: (versioning) Versionamento
 
 on:
   push:
@@ -6,39 +6,56 @@ on:
       - develop
       - release/*
   workflow_dispatch:
-    workflow_run:
-        workflows: ["(setup git) passos compartilhados"]
-        types:
-            - completed
 
 jobs:
-  versioning:
+  setup-git:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout do repositório
         uses: actions/checkout@v2
 
-      - name: Fetch all branches
-        run: git fetch --all
+      - name: Configurar Git
+        run: |
+          echo "Configurando Git..."
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          echo "Configuração do Git concluída."
 
-      - name: Bump version
+  versioning:
+    runs-on: ubuntu-latest
+    needs: setup-git
+    steps:
+      - name: (git fetch) Busca todas as branches
+        run: |
+          cd ${{ github.workspace }}
+          git fetch --all
+
+      - name: Incrementar versão
         id: bump_version
         run: |
+          cd ${{ github.workspace }}
+          echo "Buscando todas as tags..."
           git fetch --tags
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null)
           if [ -z "$latest_tag" ]; then
             new_version="v1.0.0"
+            echo "Nenhuma tag encontrada. Definindo nova versão como v1.0.0"
           else
             new_version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF++;print}')
+            echo "Última tag encontrada: $latest_tag. Nova versão: $new_version"
           fi
           echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: Cria tag com a nova versão
         run: |
+          cd ${{ github.workspace }}
           git tag ${{ env.new_version }}
           git push origin ${{ env.new_version }}
 
+  create-pr:
+    runs-on: ubuntu-latest
+    needs: versioning
+    steps:
       - name: Cria Pull Request
         if: startsWith(github.ref, 'refs/heads/release/')
         uses: peter-evans/create-pull-request@v4
