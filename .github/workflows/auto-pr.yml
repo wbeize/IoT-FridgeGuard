@@ -46,19 +46,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Automated release PR from develop'
           base: main
-          branch: ${{ steps.cria_branch_release.outputs.release_branch }}
+          branch: create-pull-request/patch
+          base-repository: wbeize/IoT-FridgeGuard
           title: 'Release PR: from develop to main'
           body: |
             Release PR automático criado a partir da branch develop.
-            - Merge da branch ${{ steps.cria_branch_release.outputs.release_branch }} para main.
-          labels: |
-            release
-            automated-pr
-          assignees: taira
-          reviewers: taira
-          milestone: 1
-          draft: false
-          delete-branch: true
+            - Merge da branch create-pull-request/patch para main.
 
       - name: Check output
         run: |
@@ -70,4 +63,4 @@ jobs:
         with:
           repository: ${{ github.repository }}
           comment-id: 0  # ajuste conforme necessário
-          reaction-type: hooray
+          reaction-type: hoor
