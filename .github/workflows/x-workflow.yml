@@ -88,7 +88,7 @@ jobs:
 
   create-release:
     runs-on: ubuntu-latest
-    needs: setup-git
+    needs: feature-check
     steps:
       - name: Cache das tags do Git
         uses: actions/cache@v3
@@ -158,7 +158,7 @@ jobs:
 
   auto-pr:
     runs-on: ubuntu-latest
-    needs: setup-git
+    needs: [setup-git, feature-check, create-release]
     permissions:
       contents: write
       pull-requests: write
