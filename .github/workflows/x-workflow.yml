@@ -86,7 +86,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Criando Pull Request para a feature branch'
-          branch: ${{ github.head_ref }}  # Ensure the branch name is not empty
+          branch: ${{ github.head_ref || github.ref_name }}  # Ensure the branch name is not empty
           base: 'develop'
           title: 'Pull Request para a feature branch'
           body: |
