@@ -1,4 +1,4 @@
-name: (create-release) Criar Branch Release
+name: (create-release) Cria Branch Release
 
 on:
   push:
@@ -11,13 +11,19 @@ on:
         - completed
 
 jobs:
+  setup-git:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v2
+
   create-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch all branches
+      - name: (git fetch) Busca todas as branches
         run: git fetch --all
 
-      - name: Cache Git tags
+      - name: Cache das tags do Git
         uses: actions/cache@v3
         with:
           path: |
@@ -28,10 +34,13 @@ jobs:
 
       - name: Verifica se a branch foi criada a partir de develop
         run: |
+          echo "Verificando se a branch foi criada a partir de develop..."
           BASE_BRANCH=$(git merge-base HEAD origin/develop)
           if [ "$BASE_BRANCH" != "$(git rev-parse origin/develop)" ]; then
             echo "Branches de release devem ser criadas a partir de develop."
             exit 1
+          else
+            echo "Branch criada corretamente a partir de develop."
           fi
 
       - name: Cria branch release
@@ -57,5 +66,5 @@ jobs:
           base: 'main'
           title: release/${{ steps.set_version.outputs.new_version }}'
           body: |
-            This pull request includes the following changes:
-            - Increment version for release
+            Este pull request inclui as seguintes alterações:
+            - Incremento de versão para release

@@ -7,10 +7,12 @@ jobs:
   setup-git:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout do repositório
         uses: actions/checkout@v2
 
-      - name: Set up Git
+      - name: Setup Git
         run: |
+          echo "Configurando Git..."
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
+          echo "Configuração do Git concluída."

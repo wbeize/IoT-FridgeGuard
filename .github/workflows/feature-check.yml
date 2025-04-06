@@ -1,4 +1,4 @@
-name: (feature-check) Verificar Origem da Branch de Feature
+name: (feature-check) Verifica Origem da Branch de Feature
 
 on:
   pull_request:
@@ -11,35 +11,45 @@ on:
         - completed
 
 jobs:
-  feature-check:
+  setup-git:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch all branches
+      - name: Checkout do repositório
+        uses: actions/checkout@v2
+
+  feature-check:
+    runs-on: ubuntu-latest
+    needs: setup-git
+    steps:
+      - name: (git fetch) Busca todas as branches
         run: git fetch --all
 
-      - name: Ensure develop branch exists locally
+      - name: Garantir que a branch develop existe localmente
         run: |
           if ! git show-ref --verify --quiet refs/heads/develop; then
+            echo "Branch develop não encontrada localmente. Fazendo checkout de origin/develop..."
             git checkout -b develop origin/develop
           else
+            echo "Branch develop encontrada localmente. Fazendo checkout..."
             git checkout develop
           fi
 
-      - name: Verify feature branch source
+      - name: Verifica origem da branch de feature
         run: |
+          echo "Verificando origem da branch de feature..."
           git fetch origin develop
           DEVELOP_HEAD=$(git rev-parse origin/develop)
           LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
           if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
-            echo "Feature branches must be created from develop or origin/develop."
+            echo "Branches de feature devem ser criadas a partir de develop ou origin/develop."
             exit 1
           else
-            echo "Feature branch created correctly from develop or origin/develop."
+            echo "Branch de feature criada corretamente a partir de develop ou origin/develop."
           fi
         env:
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
 
-      - name: Create Pull Request
+      - name: Cria Pull Request
         if: github.event_name == 'pull_request'
         uses: peter-evans/create-pull-request@v4
         with:
