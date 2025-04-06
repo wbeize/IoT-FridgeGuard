@@ -41,14 +41,12 @@ jobs:
           git checkout develop || git checkout -b develop origin/develop
           DEVELOP_HEAD=$(git rev-parse origin/develop)
           LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
-          if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
+          if [ "${{ github.event.pull_request.base.ref }}" != "develop" ] && [ "${{ github.event.pull_request.base.ref }}" != "$DEVELOP_HEAD" ] && [ "${{ github.event.pull_request.base.ref }}" != "$LOCAL_DEVELOP_HEAD" ]; then
             echo "Branches de feature devem ser criadas a partir de develop ou origin/develop."
             exit 1
           else
             echo "Branch de feature criada corretamente a partir de develop ou origin/develop."
           fi
-        env:
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
 
   create-pr:
     runs-on: ubuntu-latest
