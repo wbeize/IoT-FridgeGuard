@@ -67,9 +67,9 @@ jobs:
 
       - name: Output Commit Message
         run: |
-          echo "Commit Message: ${{ env.commit_title }}"
-#         Uncomment the following line if you want to use the commit message in the PR body
-#         echo "Commit Message: ${{ steps.commit_message.outputs.message }}"
+          echo "Commit Message: ${{ steps.commit_message.outputs.message }}"
+#         echo "Commit Message: ${{ env.commit_title }}"
+
 
 #      - name: Cria Pull Request
 #        if: github.event_name == 'pull_request'
@@ -91,8 +91,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "${GITHUB_HEAD_REF}"
-          git push --force-with-lease origin HEAD:refs/heads/${GITHUB_REF}
+          git checkout "${GITHUB_HEAD_REF}"
+          git push --force-with-lease origin "${GITHUB_HEAD_REF}:${GITHUB_REF}"
 
       - name: Create Pull Request
         if: github.event_name == 'pull_request'
