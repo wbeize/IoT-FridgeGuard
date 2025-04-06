@@ -3,7 +3,6 @@ name: (feature-check) Verifica Origem da Branch de Feature
 on:
   push:
     branches:
-      - 'develop'
       - 'feature/*'
   pull_request:
     branches:
@@ -65,8 +64,47 @@ jobs:
           fi
 
   create-pr:
+#    runs-on: ubuntu-latest
+#    needs: [setup-git, feature-check]
+#    steps:
+#      - name: Checkout do repositório
+#        uses: actions/checkout@v2
+#
+#      - name: Grant permissions for GITHUB_TOKEN
+#        env:
+#          GITHUB_HEAD_REF: ${{ github.head_ref }}
+#          GITHUB_REF: ${{ github.ref }}
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#          git fetch origin
+#          git checkout "${GITHUB_HEAD_REF}"
+#          if [[ "${GITHUB_REF}" != refs/pull/*/merge ]]; then
+#            git push --force-with-lease origin "${GITHUB_HEAD_REF}:${GITHUB_REF}"
+#          else
+#            echo "Skipping push to hidden ref ${GITHUB_REF}"
+#          fi
+#
+#      - name: Create Pull Request
+#        uses: peter-evans/create-pull-request@v5
+#        with:
+#          token: ${{ secrets.OIS_GITHUB_TOKEN }}
+#          commit-message: ${{ env.commit_title }}
+#          branch: ${{ github.head_ref }}
+#          base: 'develop'
+#          title: 'Atualizações na feature branch'
+#          body: |
+#            Este pull request inclui as seguintes alterações:
+#            - Atualizações na feature branch
+#
+#      - name: Exibir link do Pull Request
+#        run: |
+#          echo "Link do Pull Request: ${{ steps.create-pull-request.outputs.pull-request-url }}"
+
+  create-pr-on-push:
     runs-on: ubuntu-latest
-    needs: [setup-git, feature-check]
+    needs: setup-git
+    if: startsWith(github.ref, 'refs/heads/feature/')
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v2
@@ -89,7 +127,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.OIS_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ env.commit_title }}
           branch: ${{ github.head_ref }}
           base: 'develop'
@@ -97,7 +135,3 @@ jobs:
           body: |
             Este pull request inclui as seguintes alterações:
             - Atualizações na feature branch
-
-      - name: Exibir link do Pull Request
-        run: |
-          echo "Link do Pull Request: ${{ steps.create-pull-request.outputs.pull-request-url }}"
