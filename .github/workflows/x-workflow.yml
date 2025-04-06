@@ -51,7 +51,7 @@ jobs:
 
   feature-check:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/feature/**')
+    if: startsWith(github.ref, 'refs/heads/feature/')
     needs: setup-git
     steps:
       - name: Checkout do repositório
@@ -105,7 +105,7 @@ jobs:
 
   create-release:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && startsWith(github.head_ref, 'release/**')
+    if: github.ref == 'refs/heads/main' && startsWith(github.head_ref, 'release/')
     needs: feature-check
     steps:
       - name: Cache das tags do Git
@@ -176,7 +176,7 @@ jobs:
 
   auto-pr:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/feature/**') || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/origin/develop' || startsWith(github.ref, 'refs/heads/release/**')
+    if: startsWith(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/origin/develop' || startsWith(github.ref, 'refs/heads/release/')
     permissions:
       contents: write
       pull-requests: write
