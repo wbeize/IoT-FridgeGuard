@@ -51,7 +51,7 @@ jobs:
 
   feature-check:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/origin/develop' && startsWith(github.head_ref, 'feature/**')
+    if: startsWith(github.ref, 'refs/heads/feature/**') && (startsWith(github.head_ref, 'refs/heads/origin/develop') || startsWith(github.head_ref, 'refs/heads/develop'))
     needs: [setup-git, prepare-git]
     steps:
       - name: Checkout do repositório
