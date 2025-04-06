@@ -10,13 +10,18 @@ on:
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#      pull-requests: write
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Configurar credenciais HTTPS
+        run: |
+          git config --global credential.helper store
+          echo "https://${{ secrets.GITHUB_TOKEN }}:@github.com" > ~/.git-credentials
 
       - name: Make changes to pull request
         run: date +%s > report.txt
@@ -43,7 +48,6 @@ jobs:
           reviewers: retepsnave
           milestone: 1
           draft: false
-#          branch: example-patches
           delete-branch: true
 
       - name: Check output
@@ -57,26 +61,3 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reaction-type: hooray
-
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#
-#      - name: Create Pull Request
-#        uses: peter-evans/create-pull-request@v7
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          commit-message: ""Auto-created PR from ${{ github.ref_name }}""
-#          title: "Auto PR: ${{ github.ref_name }}"
-#          body: |
-#            Automated pull request created from push to ${{ github.ref_name }}
-#
-#          Branch: ${{ github.ref_name }}
-#          Triggered by: ${{ github.actor }}
-#          branch: ${{ github.ref_name }}
-#          base: main
-#          labels: |
-#            automated-pr
-#            needs-review

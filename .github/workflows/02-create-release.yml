@@ -20,6 +20,11 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           echo "Configuração do Git concluída."
 
+      - name: Configurar credenciais HTTPS
+        run: |
+          git config --global credential.helper store
+          echo "https://${{ secrets.GITHUB_TOKEN }}:@github.com" > ~/.git-credentials
+
       - name: Definir workspace
         run: cd ${{ github.workspace }}
 

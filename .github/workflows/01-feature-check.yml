@@ -27,6 +27,11 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           echo "Configuração do Git concluída."
 
+      - name: Configurar credenciais HTTPS
+        run: |
+          git config --global credential.helper store
+          echo "https://${{ secrets.GITHUB_TOKEN }}:@github.com" > ~/.git-credentials
+
       - name: Verificar se estamos no diretório correto do repositório
         run: |
           if [ ! -d ".git" ]; then
