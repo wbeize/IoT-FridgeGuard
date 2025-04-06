@@ -97,6 +97,7 @@ jobs:
 
   create-release:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     needs: feature-check
     steps:
       - name: Cache das tags do Git
