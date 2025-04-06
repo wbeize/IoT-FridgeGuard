@@ -1,0 +1,57 @@
+name: Check Feature Branch Source
+
+on:
+  pull_request:
+    branches:
+      - 'develop'
+  workflow_dispatch:
+    workflow_run:
+      workflows: ["(setup git) passos compartilhados"]
+      types:
+        - completed
+
+jobs:
+  feature-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Ensure develop branch exists locally
+        run: |
+          if ! git show-ref --verify --quiet refs/heads/develop; then
+            git checkout -b develop origin/develop
+          else
+            git checkout develop
+          fi
+
+      - name: Verify feature branch source
+        run: |
+          git fetch origin develop
+          DEVELOP_HEAD=$(git rev-parse origin/develop)
+          LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
+          if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
+            echo "Feature branches must be created from develop or origin/develop."
+            exit 1
+          else
+            echo "Feature branch created correctly from develop or origin/develop."
+          fi
+        env:
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+
+      - name: Create Pull Request
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Atualizações na feature branch'
+          branch: ${{ github.ref }}
+          base: 'develop'
+          title: 'Atualizações na feature branch'
+          body: |
+            Este pull request inclui as seguintes alterações:
+            - Atualizações na feature branch
