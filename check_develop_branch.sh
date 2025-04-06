@@ -14,6 +14,13 @@ if [ ! -d ".git" ]; then
   exit 1
 fi
 
+# Verifica se estamos na branch 'develop'
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$CURRENT_BRANCH" != "develop" ]; then
+  echo "Erro: Este script deve ser executado na branch 'develop'."
+  exit 1
+fi
+
 # Verifica se a branch 'develop' existe no repositório remoto
 if git ls-remote --heads "$REMOTE_URL" develop | grep develop > /dev/null; then
   echo "A branch 'develop' existe no repositório remoto."
