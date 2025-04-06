@@ -3,7 +3,7 @@ name: Auto PR
 on:
   push:
     branches:
-      - 'feature/*'
+      - 'feature/**'
       - 'develop'
 
 jobs:
