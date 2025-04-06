@@ -27,18 +27,12 @@ jobs:
             exit 1
           fi
 
-      - name: Clonar repositório
-        run: |
-          git clone ${{ github.event.pull_request.head.repo.clone_url }} repo
-          cd repo
-
   feature-check:
     runs-on: ubuntu-latest
     needs: setup-git
     steps:
       - name: Garantir que a branch develop existe localmente
         run: |
-          cd repo
           if ! git show-ref --verify --quiet refs/heads/develop; then
             echo "Branch develop não encontrada localmente. Fazendo checkout de origin/develop..."
             git checkout -b develop origin/develop
@@ -59,14 +53,6 @@ jobs:
           else
             echo "Branch de feature criada corretamente a partir de develop ou origin/develop."
           fi
-        env:
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
-
-      - name: Verificar branch develop no repositório remoto
-        run: |
-          cd repo
-          chmod +x /Users/taira/UNIVESP-PI-3-IoT/check_develop_branch.sh
-          /Users/taira/UNIVESP-PI-3-IoT/check_develop_branch.sh ${{ github.event.pull_request.head.repo.clone_url }}
         env:
           BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
 
