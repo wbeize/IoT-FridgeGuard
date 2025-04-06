@@ -19,7 +19,11 @@ jobs:
 
   create-release:
     runs-on: ubuntu-latest
+    needs: setup-git
     steps:
+      - name: Definir workspace
+        run: cd ${{ github.workspace }}
+
       - name: (git fetch) Busca todas as branches
         run: git fetch --all
 
@@ -64,7 +68,7 @@ jobs:
           commit-message: 'Incrementando versão de release'
           branch: 'release/${{ steps.set_version.outputs.new_version }}'
           base: 'main'
-          title: release/${{ steps.set_version.outputs.new_version }}'
+          title: 'release/${{ steps.set_version.outputs.new_version }}'
           body: |
             Este pull request inclui as seguintes alterações:
             - Incremento de versão para release
