@@ -1,10 +1,16 @@
 name: (feature-check) Verifica Origem da Branch de Feature
 
 on:
+  push:
+    branches:
+      - 'develop'
   pull_request:
     branches:
       - 'develop'
-  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   setup-git:
@@ -73,10 +79,14 @@ jobs:
 #            - Atualizações na feature branch
 
       - name: Grant permissions for GITHUB_TOKEN
+        env:
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GITHUB_REF: ${{ github.ref }}
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "${GITHUB_HEAD_REF}"
+          git push --force-with-lease origin HEAD:refs/heads/${GITHUB_REF}
 
       - name: Create Pull Request
         if: github.event_name == 'pull_request'
