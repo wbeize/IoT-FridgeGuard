@@ -13,17 +13,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Determine version suffix
+        id: version
+        run: |
+          # Determine the version suffix using the latest tag or default to 0.0.1
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
+          major=$(echo $latest_tag | cut -d. -f1)
+          minor=$(echo $latest_tag | cut -d. -f2)
+          patch=$(echo $latest_tag | cut -d. -f3)
+          new_patch=$((patch + 1))
+          new_version="${major}.${minor}.${new_patch}"
+          echo "new_version=${new_version}" >> $GITHUB_ENV
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Automated PR for new changes
-          branch: ${{ github.head_ref }}
-          base: develop
+          branch: ${{ github.head_ref }}  # Nome da branch de origem (dinâmica)
+          base: develop  # Branch de destino
           title: Automated Pull Request from ${{ github.head_ref }}
           body: This pull request has been created automatically by GitHub Actions.
-          delete-branch: false
-          branch-suffix: timestamp
+          delete-branch: false  # Não deletar a branch de origem após o merge
+          branch-suffix: ${{ env.new_version }}  # Sufixo de versão
