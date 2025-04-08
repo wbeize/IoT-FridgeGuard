@@ -40,8 +40,8 @@ jobs:
           git config --global user.email 'github-actions@github.com'
 
       - name: Create Pull Request
-        #  if: ${{ needs.setup-git.outputs.setup-complete == 'success' }}
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        if: ${{ needs.setup-git.outputs.setup-complete == 'true' }}
+        # if: ${{ github.event.workflow_run.conclusion == 'success' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: peter-evans/create-pull-request@v7
