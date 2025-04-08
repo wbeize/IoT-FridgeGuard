@@ -20,4 +20,4 @@ jobs:
 
       - name: Set output
         id: set-output
-        run: echo "::set-output name=setup-complete::true"
+        run: echo "setup-complete=true" >> $GITHUB_ENV
