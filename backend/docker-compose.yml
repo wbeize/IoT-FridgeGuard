@@ -1,4 +1,14 @@
-FROM ubuntu:latest
-LABEL authors="taira"
-
-ENTRYPOINT ["top", "-b"]
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14
+    container_name: projeto_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "db_iot_friedgeguard"
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
