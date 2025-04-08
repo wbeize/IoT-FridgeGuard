@@ -1,0 +1,58 @@
+name: (feature-create-pr)
+
+on:
+  pull_request:
+    branches:
+      - 'feature/*'
+  workflow_dispatch:
+    workflow_run:
+      workflows: ["(setup git) passos compartilhados"]
+      types:
+        - completed
+
+jobs:
+  feature-create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+#      - name: Fetch all branches
+#        run: git fetch --all
+#
+#      - name: Ensure develop branch exists locally
+#        run: |
+#          if ! git show-ref --verify --quiet refs/heads/develop; then
+#            git checkout -b develop origin/develop
+#          else
+#            git checkout develop
+#          fi
+#
+#      - name: Verify feature branch source
+#        run: |
+#          git fetch origin develop
+#          DEVELOP_HEAD=$(git rev-parse origin/develop)
+#          LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
+#          if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
+#            echo "Feature branches must be created from develop or origin/develop."
+#            exit 1
+#          else
+#            echo "Feature branch created correctly from develop or origin/develop."
+#          fi
+#        env:
+#          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Automated PR for new changes
+          branch: ${{ github.head_ref }}
+          base: develop
+          title: Automated Pull Request from ${{ github.head_ref }}
+          body: This pull request has been created automatically by GitHub Actions.
+          delete-branch: false
+          branch-suffix: timestamp
