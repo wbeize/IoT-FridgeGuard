@@ -1,9 +1,6 @@
 name: (feature-create-pr)
 
 on:
-  push:
-  pull_request:
-  workflow_dispatch: {}
   workflow_run:
     workflows: ["(setup git) passos compartilhados"]
     types:
@@ -23,7 +20,7 @@ jobs:
           git config --global user.email 'github-actions@github.com'
 
       - name: Create Pull Request
-        if: ${{ needs.setup-git.outputs.setup-complete == 'true' }}
+        if: ${{ needs.setup-git.outputs.setup-complete == 'success' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: peter-evans/create-pull-request@v7
