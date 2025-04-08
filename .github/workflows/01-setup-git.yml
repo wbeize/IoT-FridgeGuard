@@ -48,9 +48,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Automated PR for new changes
-          branch: ${{ github.head_ref }}
+          branch: ${{ github.ref_name }}
           base: develop
-          title: Automated Pull Request from ${{ github.head_ref }}
+          title: Automated Pull Request from ${{ github.ref_name }}
           body: This pull request has been created automatically by GitHub Actions.
           delete-branch: false
           branch-suffix: timestamp
