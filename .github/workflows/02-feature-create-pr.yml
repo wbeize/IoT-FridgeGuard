@@ -1,14 +1,14 @@
 name: (feature-create-pr)
 
 on:
-  pull_request:
-    branches:
-      - 'feature/*'
-  workflow_dispatch:
-    workflow_run:
-      workflows: ["(setup git) passos compartilhados"]
-      types:
-        - completed
+  workflow_run:
+    workflows: ["(setup git) passos compartilhados"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   feature-create-pr:
@@ -18,32 +18,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-#      - name: Fetch all branches
-#        run: git fetch --all
-#
-#      - name: Ensure develop branch exists locally
-#        run: |
-#          if ! git show-ref --verify --quiet refs/heads/develop; then
-#            git checkout -b develop origin/develop
-#          else
-#            git checkout develop
-#          fi
-#
-#      - name: Verify feature branch source
-#        run: |
-#          git fetch origin develop
-#          DEVELOP_HEAD=$(git rev-parse origin/develop)
-#          LOCAL_DEVELOP_HEAD=$(git rev-parse develop)
-#          if [ "$BASE_BRANCH" != "$DEVELOP_HEAD" ] && [ "$BASE_BRANCH" != "$LOCAL_DEVELOP_HEAD" ]; then
-#            echo "Feature branches must be created from develop or origin/develop."
-#            exit 1
-#          else
-#            echo "Feature branch created correctly from develop or origin/develop."
-#          fi
-#        env:
-#          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Debug GITHUB_TOKEN permissions
+        run: |
+          echo "GITHUB_TOKEN permissions:"
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/${{ github.repository }}/actions/permissions
 
       - name: Create Pull Request
+      #  if: ${{ needs.setup-git.outputs.setup-complete == 'success' }}
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: peter-evans/create-pull-request@v7

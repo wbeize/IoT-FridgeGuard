@@ -1,6 +1,8 @@
 name: (setup git) passos compartilhados
 
 on:
+  push:
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -15,3 +17,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
+
+      - name: Set output
+        id: set-output
+        run: echo "setup-complete=true" >> $GITHUB_ENV
