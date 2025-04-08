@@ -2,7 +2,7 @@ name: (ci/cd workflow) setup git
 
 on:
   push:
-  pull_request:
+#  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Set output
         id: set-output
-        run: echo "setup-complete=true" >> $GITHUB_ENV
+        run: echo "setup-complete=true" >> $GITHUB_OUTPUT
 
   feature-create-pr:
     runs-on: ubuntu-latest
